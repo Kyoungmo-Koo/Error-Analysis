@@ -107,7 +107,8 @@ def Error_Analysis_Function (csv_file, txt_file, file_length, cutoff, time_shift
     print("Mean of every trial's X MAE : ", np.mean(error_data_deg_x_mean_abs_shift), "Y MAE : ", np.mean(error_data_deg_y_mean_abs_shift))
     print("Mean of every trial's X MME : ", np.mean(error_data_deg_x_max_abs_shift), "Y MME : ", np.mean(error_data_deg_y_max_abs_shift))
     
-    return [np.mean(error_data_deg_x_rms_shift), np.mean(error_data_deg_x_mean_abs_shift), np.mean(error_data_deg_x_max_abs_shift), np.mean(error_data_deg_y_rms_shift), np.mean(error_data_deg_y_mean_abs_shift), np.mean(error_data_deg_y_max_abs_shift)]
+    return [np.mean(error_data_deg_x_rms_shift), np.mean(error_data_deg_x_mean_abs_shift), np.mean(error_data_deg_x_max_abs_shift), 
+            np.mean(error_data_deg_y_rms_shift), np.mean(error_data_deg_y_mean_abs_shift), np.mean(error_data_deg_y_max_abs_shift)]
 
 error_of_shifts = []
 for i in range(1, 15):
