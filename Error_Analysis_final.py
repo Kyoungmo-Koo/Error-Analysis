@@ -140,3 +140,27 @@ def Error_in_time_domain(actual_data_x, actual_data_y, target_data_x, target_dat
     plt.plot(t_values, error_data_y_shift[trial_num][start: start + data_num], marker = 'o', markersize = 0.1)
 
 #Error_in_time_domain(actual_data_x, actual_data_y, target_data_x, target_data_y, 6, 10, 48, 0, 500)
+
+def Float_Shift(row, time_shift, float_shift):
+    new_row = np.zeros(len(row))
+    for i in range(len(row)):
+        left = i + time_shift
+        right = i + time_shift + 1
+        if(left > len(row) - 1):
+            left = left - len(row)
+        if(right > len(row) - 1):
+            right = right - len(row)
+        new_row[i] = row[left] * (1 - float_shift) + row[right] * float_shift
+    return new_row
+
+target_data_x_new = Float_Shift(target_data_x, 6, 0.6)
+target_data_y_new = Float_Shift(target_data_y, 6, 0.6)
+
+hex_list1 = [format(int(32768 + num * 1/15 * 32768), 'X') for num in target_data_x_new]
+hex_list2 = [format(int(32768 + num * 1/15 * 32768), 'X') for num in target_data_y_new]
+target_data_new = [hex_list1[i] + hex_list2[i] for i in range(len(target_data_x_new))]
+
+write_file = "new_raster_hexadecimal_0.5.txt"
+with open(write_file, "w") as file:
+        for element in target_data_new:
+            file.write(str(element))
