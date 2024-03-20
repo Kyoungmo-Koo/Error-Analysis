@@ -114,15 +114,40 @@ def Error_Of_Shifts_Print(error_of_shifts):
 
 #Error_Of_Shifts_Print(error_of_shifts)
 
-def Error_in_time_domain(actual_data_x, actual_data_y, target_data_x, target_data_y, time_shift, trial_num, freq, start, data_num):
-    actual_data_x_shift = [row[time_shift:] for row in actual_data_x]
-    actual_data_y_shift = [row[time_shift:] for row in actual_data_y]
+def Float_Shift(row, time_shift, float_shift):
+    new_row = np.zeros(len(row))
+    for i in range(len(row)):
+        left = i + time_shift
+        right = i + time_shift + 1
+        if(left > len(row) - 1):
+            left = left - len(row)
+        if(right > len(row) - 1):
+            right = right - len(row)
+        new_row[i] = row[left] * (1 - float_shift) + row[right] * float_shift
+    return new_row
 
-    target_data_x_shift = target_data_x[0:-time_shift]
-    target_data_y_shift = target_data_y[0:-time_shift]
+def Error_in_time_domain(actual_data_x, actual_data_y, target_data_x, target_data_y, time_shift, float_shift, trial_num, freq, start, data_num):
+    actual_data_x_shift = [Float_Shift(row, time_shift, float_shift) for row in actual_data_x]
+    actual_data_y_shift = [Float_Shift(row, time_shift, float_shift) for row in actual_data_y]
+
+    target_data_x_shift = target_data_x
+    target_data_y_shift = target_data_y
 
     error_data_x_shift = subtract_lists(actual_data_x_shift, target_data_x_shift)
     error_data_y_shift = subtract_lists(actual_data_y_shift, target_data_y_shift)
+    
+    error_data_x_rms_shift = calculate_rms(error_data_x_shift)
+    error_data_x_mean_abs_shift = calculate_mean_abs(error_data_x_shift)
+    error_data_x_max_abs_shift = calculate_max_abs(error_data_x_shift)
+
+    error_data_y_rms_shift = calculate_rms(error_data_y_shift)
+    error_data_y_mean_abs_shift = calculate_mean_abs(error_data_y_shift)
+    error_data_y_max_abs_shift = calculate_max_abs(error_data_y_shift)
+    
+    print("Shift : ", time_shift)
+    print("Mean of every trial's X RMS : ", np.mean(error_data_x_rms_shift), "Y RMS : ", np.mean(error_data_y_rms_shift))
+    print("Mean of every trial's X MAE : ", np.mean(error_data_x_mean_abs_shift), "Y MAE : ", np.mean(error_data_y_mean_abs_shift))
+    print("Mean of every trial's X MME : ", np.mean(error_data_x_max_abs_shift), "Y MME : ", np.mean(error_data_y_max_abs_shift))
     
     t_values = [1/freq * i for i in range(data_num)]
     plt.figure(figsize = (5, 3))
@@ -139,7 +164,7 @@ def Error_in_time_domain(actual_data_x, actual_data_y, target_data_x, target_dat
     plt.figure(figsize = (5, 3))
     plt.plot(t_values, error_data_y_shift[trial_num][start: start + data_num], marker = 'o', markersize = 0.1)
 
-#Error_in_time_domain(actual_data_x, actual_data_y, target_data_x, target_data_y, 6, 10, 48, 0, 500)
+Error_in_time_domain(actual_data_x, actual_data_y, target_data_x, target_data_y, 6, 0.2, 10, 48, 0, 500)
 
 def Float_Shift(row, time_shift, float_shift):
     new_row = np.zeros(len(row))
