@@ -114,6 +114,27 @@ def Error_Of_Shifts_Print(error_of_shifts):
 
 #Error_Of_Shifts_Print(error_of_shifts)
 
+def arctan_function(theta, K):
+    return 2 * np.degrees(np.arctan(K / (2 + K * np.tan(np.radians(np.abs(theta))))))
+
+# Define the range of theta values (-15 degrees to 15 degrees)
+theta_values = np.linspace(-15, 15, 1000)
+
+# Define K value
+K = 27 / 48000
+
+# Calculate the function values
+function_values = arctan_function(theta_values, K)
+
+# Plot the graph
+plt.plot(theta_values, function_values)
+plt.title('Graph of arctan[K / (2 + K*tan(theta))]')
+plt.xlabel('Theta (degrees)')
+plt.ylabel('arctan[K / (2 + K*tan(theta))]')
+plt.ylim(0.0322, 0.03223)
+plt.grid(True)
+plt.show()
+
 def Float_Shift(row, time_shift, float_shift):
     new_row = np.zeros(len(row))
     for i in range(len(row)):
